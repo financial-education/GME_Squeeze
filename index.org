@@ -1,0 +1,11 @@
+#+title: The GME Gamma/Short Squeeze
+#+author: Matt Brigida, Ph.D.
+#+date: January 22, 2020
+
+* Overview
+
+
+* Delta Hedging Calls
+
+
+* Delta Hedging Puts
