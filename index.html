@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-03-30 Tue 21:16 -->
+<!-- 2021-07-05 Mon 19:02 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>The GME Gamma/Short Squeeze</title>
@@ -40,7 +40,7 @@
   }
   pre.src {
     position: relative;
-    overflow: visible;
+    overflow: auto;
     padding-top: 1.2em;
   }
   pre.src:before {
@@ -52,7 +52,7 @@
     padding: 3px;
     border: 1px solid black;
   }
-  pre.src:hover:before { display: inline;}
+  pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
@@ -161,6 +161,19 @@
   .footdef  { margin-bottom: 1em; }
   .figure { padding: 1em; }
   .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
   .inlinetask {
     padding: 10px;
     border: 2px solid gray;
@@ -187,50 +200,26 @@
 <script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/lib/js/jquery.stickytableheaders.min.js"></script>
 <script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/readtheorg.js"></script>
 <script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2017 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
+// @license magnet:?xt=urn:btih:1f739d935676111cfff4b4693e3816e664797050&amp;dn=gpl-3.0.txt GPL-v3-or-Later
 <!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
 </script>
 </head>
 <body>
@@ -240,47 +229,99 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgbbc5e95">1. Overview</a></li>
-<li><a href="#orge835c24">2. Delta Hedging Calls</a></li>
-<li><a href="#org48328a8">3. Delta Hedging Puts</a></li>
-<li><a href="#org051721a">4. January 22</a>
+<li><a href="#orgcd8a0ba">1. Overview</a>
 <ul>
-<li><a href="#org1f60b19">4.1. Delta</a></li>
-<li><a href="#orgbe14ddd">4.2. Gamma</a></li>
+<li><a href="#orgbdb08b6">1.1. Short Interest</a></li>
+<li><a href="#orgd14d120">1.2. Derivatives and Short Positions</a></li>
+</ul>
+</li>
+<li><a href="#org6413cd0">2. Delta Hedging Calls</a></li>
+<li><a href="#org348667a">3. Delta Hedging Puts</a></li>
+<li><a href="#orga34133c">4. January 22</a>
+<ul>
+<li><a href="#orgcf21c75">4.1. Delta</a></li>
+<li><a href="#org7c5819f">4.2. Gamma</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-
-<div id="outline-container-orgbbc5e95" class="outline-2">
-<h2 id="orgbbc5e95"><span class="section-number-2">1</span> Overview</h2>
+<div id="outline-container-orgcd8a0ba" class="outline-2">
+<h2 id="orgcd8a0ba"><span class="section-number-2">1.</span> Overview</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+In a short squeeze a rising stock price causes short sellers to cover thier
+position to limit losses.  To cover short sellers need ot buy, but this
+purchase pushes up the stock causing more losses to other short sellers who
+have not yet exited thier trade.  This causes more short covering (stock
+purchases) which further causes short seller losses, and the cycle continues.
+Moreover, this cycle can be exaerbated by derivative positions as highlighted
+below.
+</p>
 </div>
 
-<div id="outline-container-orge835c24" class="outline-2">
-<h2 id="orge835c24"><span class="section-number-2">2</span> Delta Hedging Calls</h2>
+<div id="outline-container-orgbdb08b6" class="outline-3">
+<h3 id="orgbdb08b6"><span class="section-number-3">1.1.</span> Short Interest</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+The likelihood of a short squeeze is increasing the the proportions of a firm's shares which are sold short.  This proportion is known as <i>short interest</i>.  
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgd14d120" class="outline-3">
+<h3 id="orgd14d120"><span class="section-number-3">1.2.</span> Derivatives and Short Positions</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Market participants can be short the stock without actually short selling the
+stock itself.  If you sell a call option on a stock, and hold no other
+position in the stock, you will lose money as the stock increases.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6413cd0" class="outline-2">
+<h2 id="org6413cd0"><span class="section-number-2">2.</span> Delta Hedging Calls</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Often option sellers, particularly financial intermediaries, will sell call
+options without wating to make a directional bet.  So they have to hedge out
+the risk that the stock price will increase.  This is termed <i>Delta Hedging</i>.
+</p>
+
+<p>
+Assuming a model like <i>Black-Scholes</i> we can calculate the sensitivity of the
+option to changes in the stock price.  We call this sensitivity the option's <i>Delta</i>.  For example, if a call option's Delta is 0.20, then if the stock increases by $1, the option's value will increase by $0.20.
+</p>
+
+<p>
+Importantly, an option's <i>Delta</i> changes as the stock changes.  As a stock's price increases, the <i>Delta</i> of the call options on that stock also increase.  This means anyone <i>Delta Hedging</i> must <b><b>buy</b></b> stock.  These stock purchases to <i>Delta Hedge</i> have contributed to the recent short-squeeze in GME.  We'll take a look at how the <i>Delta</i> for GME calls behaved below.
+</p>
+</div>
 </div>
 
 
-<div id="outline-container-org48328a8" class="outline-2">
-<h2 id="org48328a8"><span class="section-number-2">3</span> Delta Hedging Puts</h2>
+
+<div id="outline-container-org348667a" class="outline-2">
+<h2 id="org348667a"><span class="section-number-2">3.</span> Delta Hedging Puts</h2>
 </div>
 
 
-<div id="outline-container-org051721a" class="outline-2">
-<h2 id="org051721a"><span class="section-number-2">4</span> January 22</h2>
+<div id="outline-container-orga34133c" class="outline-2">
+<h2 id="orga34133c"><span class="section-number-2">4.</span> January 22</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org1f60b19" class="outline-3">
-<h3 id="org1f60b19"><span class="section-number-3">4.1</span> Delta</h3>
+<div id="outline-container-orgcf21c75" class="outline-3">
+<h3 id="orgcf21c75"><span class="section-number-3">4.1.</span> Delta</h3>
 <div class="outline-text-3" id="text-4-1">
 <iframe src="./Jan_22/option_analysis/delta_Jan_22.html" width="100%" height="500px"></iframe>
 </div>
 </div>
 
-<div id="outline-container-orgbe14ddd" class="outline-3">
-<h3 id="orgbe14ddd"><span class="section-number-3">4.2</span> Gamma</h3>
+<div id="outline-container-org7c5819f" class="outline-3">
+<h3 id="org7c5819f"><span class="section-number-3">4.2.</span> Gamma</h3>
 <div class="outline-text-3" id="text-4-2">
 <iframe src="./Jan_22/option_analysis/gamma_Jan_22.html" width="100%" height="500px"></iframe>
 </div>
@@ -290,8 +331,8 @@ for the JavaScript code in this tag.
 <div id="postamble" class="status">
 <p class="date">Date: January 22, 2020</p>
 <p class="author">Author: Matt Brigida, Ph.D.</p>
-<p class="date">Created: 2021-03-30 Tue 21:16</p>
-<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+<p class="date">Created: 2021-07-05 Mon 19:02</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
 </html>

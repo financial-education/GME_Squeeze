@@ -4,11 +4,38 @@
 #+email: matthew.brigida@sunypoly.edu
 #+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
 
-
 * Overview
+
+  In a short squeeze a rising stock price causes short sellers to cover thier
+  position to limit losses.  To cover short sellers need ot buy, but this
+  purchase pushes up the stock causing more losses to other short sellers who
+  have not yet exited thier trade.  This causes more short covering (stock
+  purchases) which further causes short seller losses, and the cycle continues.
+  Moreover, this cycle can be exaerbated by derivative positions as highlighted
+  below.
+
+** Short Interest
+
+   The likelihood of a short squeeze is increasing the the proportions of a firm's shares which are sold short.  This proportion is known as /short interest/.  
+
+** Derivatives and Short Positions
+
+   Market participants can be short the stock without actually short selling the
+   stock itself.  If you sell a call option on a stock, and hold no other
+   position in the stock, you will lose money as the stock increases.
 
 * Delta Hedging Calls
 
+  Often option sellers, particularly financial intermediaries, will sell call
+  options without wating to make a directional bet.  So they have to hedge out
+  the risk that the stock price will increase.  This is termed /Delta Hedging/.
+
+  Assuming a model like /Black-Scholes/ we can calculate the sensitivity of the
+  option to changes in the stock price.  We call this sensitivity the option's /Delta/.  For example, if a call option's Delta is 0.20, then if the stock increases by $1, the option's value will increase by $0.20.
+
+  Importantly, an option's /Delta/ changes as the stock changes.  As a stock's price increases, the /Delta/ of the call options on that stock also increase.  This means anyone /Delta Hedging/ must **buy** stock.  These stock purchases to /Delta Hedge/ have contributed to the recent short-squeeze in GME.  We'll take a look at how the /Delta/ for GME calls behaved below.
+
+  
 
 * Delta Hedging Puts
 
